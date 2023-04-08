@@ -23,7 +23,7 @@ class Ui__MainWindow2(object):
 
     def setupUi(self, UI):
         UI.setObjectName("UI_MainWindow")
-        UI.resize(658, 514)
+        UI.resize(960, 680)
         # 总区域
         self.total_area = QtWidgets.QWidget(UI)
         self.total_area.setObjectName("total_area")

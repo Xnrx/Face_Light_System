@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui__MainWindow(object):
     def setupUi(self, UI_MainWindow):
         UI_MainWindow.setObjectName("UI_MainWindow")
-        UI_MainWindow.resize(598, 480)
+        UI_MainWindow.resize(980, 780)
 
         # 总区域
         self.horizontalLayout = QtWidgets.QHBoxLayout(UI_MainWindow)
@@ -24,13 +24,21 @@ class Ui__MainWindow(object):
         self.__layout_fun_button = QtWidgets.QVBoxLayout()
         self.__layout_fun_button.setObjectName("__layout_fun_button")
 
+        # 按钮字体格式
+        font = QtGui.QFont()
+        font.setPointSize(12)
+
         # 打开摄像头按钮
         self.button_open_camera = QtWidgets.QPushButton(UI_MainWindow)
         self.button_open_camera.setObjectName("button_open_camera")
+        self.button_open_camera.setFont(font)
+        self.button_open_camera.setMinimumSize(QtCore.QSize(0, 35))
 
         # 退出按钮
         self.button_close = QtWidgets.QPushButton(UI_MainWindow)
         self.button_close.setObjectName("button_close")
+        self.button_close.setFont(font)
+        self.button_close.setMinimumSize(QtCore.QSize(0, 35))
 
         # 把按键加入到按键布局中
         self.__layout_fun_button.addWidget(self.button_open_camera)
