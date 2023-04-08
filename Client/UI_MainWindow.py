@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_UI_MainWindow(object):
+class Ui__MainWindow2(object):
     def __init__(self):
         self.label_show_camera = None
         self.button_close = None
@@ -21,11 +21,11 @@ class Ui_UI_MainWindow(object):
         self.total_area = None
         self.button_open_camera = None
 
-    def setupUi(self, UI_MainWindow):
-        UI_MainWindow.setObjectName("UI_MainWindow")
-        UI_MainWindow.resize(658, 514)
+    def setupUi(self, UI):
+        UI.setObjectName("UI_MainWindow")
+        UI.resize(658, 514)
         # 总区域
-        self.total_area = QtWidgets.QWidget(UI_MainWindow)
+        self.total_area = QtWidgets.QWidget(UI)
         self.total_area.setObjectName("total_area")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.total_area)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -82,13 +82,13 @@ class Ui_UI_MainWindow(object):
         self.__layout_main.addLayout(self.__layout_fun_button)
         self.__layout_main.addWidget(self.label_show_camera)
         self.horizontalLayout_2.addLayout(self.__layout_main)
-        UI_MainWindow.setCentralWidget(self.total_area)
+        UI.setCentralWidget(self.total_area)
 
-        self.reTranslateUi(UI_MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(UI_MainWindow)
+        self.reTranslateUi(UI)
+        QtCore.QMetaObject.connectSlotsByName(UI)
 
-    def reTranslateUi(self, UI_MainWindow):
+    def reTranslateUi(self, UI):
         _translate = QtCore.QCoreApplication.translate
-        UI_MainWindow.setWindowTitle(_translate("UI_MainWindow", "FSLSystem"))
+        UI.setWindowTitle(_translate("UI_MainWindow", "FSLSystem"))
         self.button_open_camera.setText(_translate("UI_MainWindow", "关闭摄像头"))
         self.button_close.setText(_translate("UI_MainWindow", "退出"))
