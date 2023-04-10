@@ -1,4 +1,5 @@
 import sys
+import time
 
 import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -9,14 +10,8 @@ from InitRecognizerSys import InitRecognizerSys
 from UI_MainWindow3 import Ui__MainWindow
 
 
-class ArduinoThread(QtCore.QThread):
-    def __init__(self):
-        super(ArduinoThread, self).__init__()
-
-
 class CameraThread(QtCore.QThread):
     image_updated = QtCore.pyqtSignal(QtGui.QImage)
-    user_updated = QtCore.pyqtSignal(User.User)
 
     def __init__(self, camera_index, url):
         super(CameraThread, self).__init__()
@@ -30,9 +25,12 @@ class CameraThread(QtCore.QThread):
         self.is_running = False
 
     def run(self):
-        self.caS = CameraSelector('local', self.camera_index, self.url)
+        self.caS = CameraSelector('ip', self.camera_index, self.url)
         self.cap = self.caS.camera
-        self.cap.capture.open(self.camera_index)
+        if not self.faceSys.serial.isOpen():
+            self.faceSys.serial.open()
+        if self.caS.get_camera_type == 'local':
+            self.cap.capture.open(self.camera_index)
         while True:
             if not self.is_running:
                 break
@@ -42,8 +40,11 @@ class CameraThread(QtCore.QThread):
             show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)
             showImage = QtGui.QImage(show.data, show.shape[1], show.shape[0], QtGui.QImage.Format_RGB888)
             self.image_updated.emit(showImage)  # emit a signal to update the GUI with the new image
-            self.user_updated.emit(self.user)
-        self.cap.release()
+        if self.caS.get_camera_type == 'local':
+            self.cap.release()
+        self.faceSys.serial.close()
+        self.faceSys.serial.open()
+        self.faceSys.serial.close()
 
     def stop(self):
         self.is_running = False
@@ -54,7 +55,6 @@ class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
         self.camera_thread = CameraThread(0, 'http://172.20.10.2/cam-hi.jpg')
-        self.timer_camera = QtCore.QTimer()
         self.slot_init()
 
     # 两个按钮信号槽初始化
@@ -80,9 +80,18 @@ class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
         self.label_faceInfo.setText(self.camera_thread.user.user_id)
         self.camera_thread.faceSys.receive_and_send_signal(self.camera_thread.user)
 
+    def closeEvent(self, event):
+        # 执行一些代码
+        self.camera_thread.faceSys.serial.close()
+        self.camera_thread.faceSys.serial.open()
+        self.camera_thread.faceSys.serial.close()
+        # 调用父类的 closeEvent 方法
+        super(MainWindow, self).closeEvent(event)
+
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)  # 固定的，表示程序应用
     ui = MainWindow()  # 实例化Ui_MainWindow
     ui.show()  # 调用ui的show()以显示。同样show()是源于父类QtWidgets.QWidget的
     sys.exit(app.exec_())  # 不加这句，程序界面会一闪而过
+
