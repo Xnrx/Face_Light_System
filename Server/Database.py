@@ -1,5 +1,6 @@
 import pymssql
 
+
 class Database:
     def __init__(self, server, user, password, database):
         """
@@ -16,14 +17,14 @@ class Database:
         self.conn = None
         self.cursor = None
 
-
     def connect(self):
         """
         连接数据库
         :return:
         """
         # 建立数据库连接
-        self.conn = pymssql.connect(server=self.server, user=self.user, password=self.password, database=self.database, charset='GB18030')
+        self.conn = pymssql.connect(server=self.server, user=self.user, password=self.password, database=self.database,
+                                    charset='GB18030')
         # 获取游标
         self.cursor = self.conn.cursor()
 

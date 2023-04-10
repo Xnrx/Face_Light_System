@@ -67,7 +67,7 @@ class Ui__MainWindow2(object):
         # 把按键加入到按键布局中
         self.__layout_fun_button.addWidget(self.button_open_camera, 0, QtCore.Qt.AlignHCenter)
         self.__layout_fun_button.addWidget(self.button_close, 0, QtCore.Qt.AlignHCenter)
-        
+
         self.label_show_camera = QtWidgets.QLabel(self.total_area)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(3)
@@ -77,7 +77,7 @@ class Ui__MainWindow2(object):
         self.label_show_camera.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.label_show_camera.setTextFormat(QtCore.Qt.MarkdownText)
         self.label_show_camera.setObjectName("label_show_camera")
-        
+
         # 把某些控件加入到总布局中
         self.__layout_main.addLayout(self.__layout_fun_button)
         self.__layout_main.addWidget(self.label_show_camera)

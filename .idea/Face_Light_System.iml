@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/Client" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Server" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.8 (Face_Light_System)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,27 +1,54 @@
 import sys
+import threading
 
 import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QObject
 
 from CameraSelector import CameraSelector
+from InitRecognizerSys import InitRecognizerSys
 from UI_MainWindow3 import Ui__MainWindow
+
+
+class Worker(QObject):
+    def __init__(self, parent=None):
+        super(Worker, self).__init__(parent)
+        self.cap = cv2.VideoCapture(0)
+        self.faceRecognizerSys = InitRecognizerSys().faReSys
+        self.user = None
+
+    @QtCore.pyqtSlot()
+    def doWork(self):
+        while True:
+            ret, frame = self.cap.read()
+            if ret:
+                self.user = self.faceRecognizerSys.recognize_user(frame)
 
 
 class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
+
+        self.worker = Worker()  # 创建Worker对象
+        self.thread = QtCore.QThread()  # 创建QThread对象
+        self.worker.moveToThread(self.thread)  # 将Worker对象移动到新线程中执行
+        self.thread.started.connect(self.worker.doWork)  # 连接Worker的doWork()信号与QThread的start()槽函数
+        self.thread.start()  # 启动新线程
+
+        self.user = None
         self.image = None
         self.timer_camera = QtCore.QTimer()  # 定义定时器，用于控制显示视频的帧率
         self.camera_index = 0
         self.url = 'http://172.20.10.2/cam-hi.jpg'  # 改成自己的ip地址+/cam-hi.jpg
-        self.caS = CameraSelector('ip', self.camera_index, self.url)
+        self.caS = CameraSelector('local', self.camera_index, self.url)
         self.cap = self.caS.camera  # 视频流
         self.setupUi(self)
         self.slot_init()  # 初始化槽函数
 
     def slot_init(self):
         """初始化所有槽函数"""
-        self.button_open_camera.clicked.connect(self.button_open_camera_clicked)  # 若该按键被点击，则调用button_open_camera_clicked()
+        self.button_open_camera.clicked.connect(
+            self.button_open_camera_clicked)  # 若该按键被点击，则调用button_open_camera_clicked()
         self.timer_camera.timeout.connect(self.show_camera)  # 若定时器结束，则调用show_camera()
         self.button_close.clicked.connect(self.close)  # 若该按键被点击 ，则调用close()，注意这个close是父类QtWidgets.QWidget自带的，会关闭程序
 
@@ -40,10 +67,15 @@ class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
             self.button_open_camera.setText('打开摄像头')
 
     def show_camera(self):
+        """
+        更新图像帧
+        """
         self.image = self.cap.get_frame()
+
         show = cv2.resize(self.image, (896, 672))  # 把读到的帧的大小重新设置为 640x480
         show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)  # 视频色彩转换回RGB，这样才是现实的颜色
-        showImage = QtGui.QImage(show.data, show.shape[1], show.shape[0], QtGui.QImage.Format_RGB888)  # 把读取到的视频数据变成QImage形式
+        showImage = QtGui.QImage(show.data, show.shape[1], show.shape[0],
+                                 QtGui.QImage.Format_RGB888)  # 把读取到的视频数据变成QImage形式
         self.label_show_camera.setPixmap(QtGui.QPixmap.fromImage(showImage))  # 往显示视频的Label里 显示QImage
 
 

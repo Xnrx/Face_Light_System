@@ -47,6 +47,4 @@ class UserManager(UserList):
             self.rgb_dic[name] = rgb
         print(self.rgb_dic)
         for user in self.list:
-             user.RGB = self.rgb_dic.get(user.user_id, '000000000')
-
-
+            user.RGB = self.rgb_dic.get(user.user_id, '000000000')

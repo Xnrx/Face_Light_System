@@ -43,7 +43,7 @@ class UserList:
         :return: 新用户
         """
 
-        #添加新用户
+        # 添加新用户
         len_path = self.get_user_images_len(user_id)
 
         if len_path >= 5:

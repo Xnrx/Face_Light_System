@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>UI_MainWindow</class>
- <widget class="QWidget" name="UI_MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>598</width>
-    <height>480</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
-   <item>
-    <layout class="QVBoxLayout" name="__layout_fun_button">
-     <item>
-      <widget class="QPushButton" name="button_open_camera">
-       <property name="text">
-        <string>关闭摄像头</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="button_close">
-       <property name="text">
-        <string>退出窗口</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QLabel" name="label_show_camera">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>3</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
+    <class>UI_MainWindow</class>
+    <widget class="QWidget" name="UI_MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>598</width>
+                <height>480</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Form</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+                <layout class="QVBoxLayout" name="__layout_fun_button">
+                    <item>
+                        <widget class="QPushButton" name="button_open_camera">
+                            <property name="text">
+                                <string>关闭摄像头</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="button_close">
+                            <property name="text">
+                                <string>退出窗口</string>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+            <item>
+                <widget class="QLabel" name="label_show_camera">
+                    <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                            <horstretch>3</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string/>
+                    </property>
+                </widget>
+            </item>
+        </layout>
     </widget>
-   </item>
-  </layout>
- </widget>
- <resources/>
- <connections/>
+    <resources/>
+    <connections/>
 </ui>

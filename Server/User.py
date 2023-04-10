@@ -36,4 +36,3 @@ class User:
         for image in images:
             feature = recognizer.recognize_face(image)
             self.features.append(feature)
-

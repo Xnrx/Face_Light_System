@@ -61,8 +61,6 @@ def main():
     db = Database(server='LAPTOP-NO19G1TG', user='sa', password='zhong5567', database='Python')
     db.connect()
     result = db.query('SELECT * FROM UserSettings')
-
-    print(result)
     um.load_rgbs(result)
 
     while True:
