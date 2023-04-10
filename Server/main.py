@@ -51,7 +51,7 @@ def main():
     um.load_images_and_features(modelD_path, modelR_path, input_shape)
 
     # 视频流初始化
-    camera_select = CameraSelector('ip', camera_index, url)
+    camera_select = CameraSelector('local', camera_index, url)
     camera = camera_select.camera
 
     # 人脸识别系统初始化
