@@ -90,5 +90,5 @@ class Ui__MainWindow2(object):
     def reTranslateUi(self, UI):
         _translate = QtCore.QCoreApplication.translate
         UI.setWindowTitle(_translate("UI_MainWindow", "FSLSystem"))
-        self.button_open_camera.setText(_translate("UI_MainWindow", "关闭摄像头"))
-        self.button_close.setText(_translate("UI_MainWindow", "退出"))
+        self.button_open_camera.setText(_translate("UI_MainWindow", "打开摄像头"))
+        self.button_close.setText(_translate("UI_MainWindow", "退出窗口"))

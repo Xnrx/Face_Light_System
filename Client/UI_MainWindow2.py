@@ -60,5 +60,5 @@ class Ui__MainWindow(object):
     def reTranslateUi(self, UI_MainWindow):
         _translate = QtCore.QCoreApplication.translate
         UI_MainWindow.setWindowTitle(_translate("UI_MainWindow", "Form"))
-        self.button_open_camera.setText(_translate("UI_MainWindow", "关闭摄像头"))
+        self.button_open_camera.setText(_translate("UI_MainWindow", "打开摄像头"))
         self.button_close.setText(_translate("UI_MainWindow", "退出窗口"))

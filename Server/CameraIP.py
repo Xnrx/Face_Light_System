@@ -23,3 +23,5 @@ class CameraIP:
         frame = cv2.imdecode(imgNp, -1)
         return frame
 
+    def release(self):
+        pass
