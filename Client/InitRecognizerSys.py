@@ -17,10 +17,7 @@ class InitRecognizerSys(FaceRecognizer, ArduinoController):
         self.rate = 115200
         self.users_path = '../user/'
         self.users_list = []  # 用户列表
-        FaceRecognizer.__init__(self, self.modelD_path, self.modelR_path, self.input_shape)  # 调用FaceRecognizer类的构造函数
-        ArduinoController.__init__(self, self.port, self.rate)  # 调用ArduinoController类的构造函数
-        self.faReSys = FaceRecognitionSystem(self.modelD_path, self.modelR_path, self.input_shape, self.port, self.rate,
-                                             self.users_list)
+        self.faReSys = FaceRecognitionSystem(self.modelD_path, self.modelR_path, self.input_shape, self.port, self.rate, self.users_list)
         self.um = UserManager(self.users_path, self.users_list)  # 用户管理初始化
         self.db = Database(server='LAPTOP-NO19G1TG', user='sa', password='zhong5567', database='Python')  # 数据库初始化
         self.setUsers()
