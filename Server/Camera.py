@@ -8,7 +8,6 @@ class Camera:
         """
         self.camera_index = camera_index
         self.capture = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
-        self.capture.open(self.camera_index)
 
     def get_frame(self):
         """

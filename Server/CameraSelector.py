@@ -28,3 +28,10 @@ class CameraSelector:
             self.camera = Camera(self.camera_index)
         elif camera_type == 'ip':
             self.camera = CameraIP(self.url)
+
+    def get_camera_type(self):
+        """
+        返回摄像头类型
+        :return: 摄像头类型
+        """
+        return self.camera_type
