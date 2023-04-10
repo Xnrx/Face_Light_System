@@ -30,7 +30,7 @@ class UserList:
         :return: 新用户id
         """
         user_id = input("请输入姓名:")
-        path = f'user/{user_id}/images/'
+        path = f'../user/{user_id}/images/'
         if not os.path.exists(path):
             os.makedirs(path)
         return user_id
@@ -50,7 +50,7 @@ class UserList:
             print("您的照片已超过五张，无法录入")
         else:
             file_name = len_path + 1
-            new_path = f"user/{user_id}/images/{file_name}.jpg"
+            new_path = f"../user/{user_id}/images/{file_name}.jpg"
             cv2.imencode('.jpg', image)[1].tofile(new_path)
             print("已录入人脸")
 
@@ -62,7 +62,7 @@ class UserList:
         :param user_id: 要查看的用户的id
         :return: 该用户图像数量
         """
-        path = f'user/{user_id}/images/'
+        path = f'../user/{user_id}/images/'
         pic_file = os.listdir(path)
         len_path = len(pic_file)
         return len_path
