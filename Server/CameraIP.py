@@ -21,5 +21,5 @@ class CameraIP:
         imgResp = urllib.request.urlopen(self.url)
         imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
         frame = cv2.imdecode(imgNp, -1)
-        return  frame
+        return frame
 
