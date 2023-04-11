@@ -1,4 +1,5 @@
 import os
+import datetime
 
 import cv2
 
@@ -45,11 +46,12 @@ class UserList:
 
         # 添加新用户
         len_path = self.get_user_images_len(user_id)
-
+        now = datetime.datetime.now()
+        current_time = now.strftime("%Y%m%d%H%M%S")
         if len_path >= 5:
             print("您的照片已超过五张，无法录入")
         else:
-            file_name = len_path + 1
+            file_name = user_id + '_' + current_time
             new_path = f"../user/{user_id}/images/{file_name}.jpg"
             cv2.imencode('.jpg', image)[1].tofile(new_path)
             print("已录入人脸")

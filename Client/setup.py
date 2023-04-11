@@ -7,7 +7,7 @@ from PyQt5.QtCore import QObject
 import User
 from CameraSelector import CameraSelector
 from InitRecognizerSys import InitRecognizerSys
-from UI_MainWindow3 import Ui__MainWindow
+from UI_MainWindow4 import Ui__MainWindow
 
 
 class CameraThread(QtCore.QThread):
@@ -25,7 +25,7 @@ class CameraThread(QtCore.QThread):
         self.is_running = False
 
     def run(self):
-        self.caS = CameraSelector('ip', self.camera_index, self.url)
+        self.caS = CameraSelector('local', self.camera_index, self.url)
         self.cap = self.caS.camera
         if not self.faceSys.serial.isOpen():
             self.faceSys.serial.open()
@@ -40,8 +40,7 @@ class CameraThread(QtCore.QThread):
             show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)
             showImage = QtGui.QImage(show.data, show.shape[1], show.shape[0], QtGui.QImage.Format_RGB888)
             self.image_updated.emit(showImage)  # emit a signal to update the GUI with the new image
-        if self.caS.get_camera_type == 'local':
-            self.cap.release()
+        self.cap.release()
         self.faceSys.serial.close()
         self.faceSys.serial.open()
         self.faceSys.serial.close()
@@ -72,12 +71,12 @@ class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
             self.camera_thread.stop()
             self.camera_thread.image_updated.disconnect(self.update_image)  # 槽断开连接信号
             self.label_show_camera.clear()
-            self.label_faceInfo.clear()
+            self.label_show_id.clear()
             self.button_open_camera.setText('打开摄像头')
 
     def update_image(self, image):
         self.label_show_camera.setPixmap(QtGui.QPixmap.fromImage(image))
-        self.label_faceInfo.setText(self.camera_thread.user.user_id)
+        self.label_show_id.setText(self.camera_thread.user.user_id)
         self.camera_thread.faceSys.receive_and_send_signal(self.camera_thread.user)
 
     def closeEvent(self, event):
