@@ -5,7 +5,7 @@ from User import User
 
 
 class FaceRecognitionSystem(FaceRecognizer, ArduinoController):
-    def __init__(self, modelD_path, modelR_path, input_shape, port, rate, user_list):
+    def __init__(self, modelD_path, modelR_path, input_shape, port, rate, list):
         """
         初始化FaceRecognitionSystem类的新实例。
         :param modelD_path: 人脸检测模型文件的路径。
@@ -19,7 +19,8 @@ class FaceRecognitionSystem(FaceRecognizer, ArduinoController):
         ArduinoController.__init__(self, port, rate)  # 调用ArduinoController类的构造函数
         self.cosine_similarity_threshold = 0.363  # 余弦相似度阈值
         self.l2_similarity_threshold = 1.128  # L2范数相似度阈值
-        self.user_list = user_list  # 用户列表
+        self.user_list = list  # 用户列表
+        self.last_signal = '000000255'
 
     def recognize_user(self, image):
         """
@@ -27,13 +28,13 @@ class FaceRecognitionSystem(FaceRecognizer, ArduinoController):
         :param image: 要识别的人脸的图像。
         :return: 最符合的用户。
         """
-        best_match_user = User('未登记人员', '255000000')  # 最相似的用户。
+        best_match_user = User('未登记人员', '255255255')  # 最相似的用户。
         best_match_score = -1  # 最高的相似度得分。
 
         feature1 = self.recognize_face(image)  # 提取要识别的人脸的特征向量。
 
         if feature1 is None:
-            best_match_user = User('未检测到人脸', '255000000')
+            best_match_user = User('未检测到人脸', '255255255')
         else:
             for user in self.user_list:  # 遍历用户列表。
                 for feature2 in user.features:  # 遍历当前用户的特征向量列表。
@@ -61,6 +62,10 @@ class FaceRecognitionSystem(FaceRecognizer, ArduinoController):
         :param cur_user: 当前用户id
         """
         signal = cur_user.RGB
+        if cur_user.user_id == '未检测到人脸' or cur_user.user_id == '未登记人员':
+            signal = self.last_signal
         if self.serial.in_waiting:
             self.send_signal(signal)
             self.receive_signal('utf-8')
+        self.last_signal = signal
+

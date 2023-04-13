@@ -43,11 +43,12 @@ def main():
     rate = 115200
     users_path = '../user/'
     users_list = []
+    rgb_dic = {}
     camera_index = 0
     url = 'http://172.20.10.2/cam-hi.jpg'  # 改成自己的ip地址+/cam-hi.jpg
 
     # 用户管理初始化
-    um = UserManager(users_path, users_list)
+    um = UserManager(users_path, users_list, rgb_dic)
     um.load_images_and_features(modelD_path, modelR_path, input_shape)
 
     # 视频流初始化
