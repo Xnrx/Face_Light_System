@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QDialog
 import User
 from CameraSelector import CameraSelector
 from InitRecognizerSys import InitRecognizerSys
+from QueryWindow import QueryWindow
 from UI_MainWindow4 import Ui__MainWindow
 from queryUI import Ui_select_all_user
 
@@ -23,12 +24,6 @@ class QueryWindowThread(QThread):
 
     def run(self):
         self.query_window_closed.emit()
-
-
-class QueryWindow(QDialog, Ui_select_all_user):
-    def __init__(self, parent=None):
-        super(Ui_select_all_user, self).__init__(parent)
-        self.setupUi(self)
 
 
 class CameraThread(QtCore.QThread):

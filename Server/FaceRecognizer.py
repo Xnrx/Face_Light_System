@@ -1,4 +1,6 @@
 import cv2
+import numpy as np
+
 from FaceDetector import FaceDetector
 from IFaceRecognizer import IFaceRecognizer
 
@@ -30,3 +32,23 @@ class FaceRecognizer(IFaceRecognizer):
         face_align = self.recognizer.alignCrop(image, face_detect[1])
         face_feature = self.recognizer.feature(face_align)
         return face_feature
+
+    def drawFace(self, IMG, faceArray):
+        for face_index, face_coords in enumerate(faceArray[1]):
+            thickness = 2
+
+            # 准确度
+            accuracy = face_coords[-1]
+
+            # 坐标转成int类型
+            coords = face_coords[:-1].astype(np.int32)
+
+            # 框出人脸
+            cv2.rectangle(IMG, (coords[0], coords[1]), (coords[0] + coords[2], coords[1] + coords[3]),
+                          (0, 255, 0),
+                          thickness)
+
+            # 显示准确度
+            cv2.putText(IMG, 'The accuracy of: {:.2f}'.format(accuracy), (1, 16), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                        (0, 0, 255), 1)
+            return IMG

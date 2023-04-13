@@ -20,7 +20,21 @@ class Ui_select_all_user(QtWidgets.QWidget, QStandardItemModel):
     def setupUi(self, select_all_user):
         select_all_user.setObjectName("select_all_user")
         select_all_user.resize(520, 640)
+        # 获取屏幕大小
+        screen_size = QtWidgets.QDesktopWidget().screenGeometry(-1)
+        screen_width, screen_height = screen_size.width(), screen_size.height()
 
+        # 设置窗口大小
+        window_width, window_height = 520, 640
+
+        # 计算窗口左上角位置
+        x = (screen_width - window_width) // 2 + 750
+        y = (screen_height - window_height) // 2 - 50
+
+        # 设置窗口位置和大小
+        self.setGeometry(x, y, window_width, window_height)
+        select_all_user.setMinimumSize(520, 640)
+        select_all_user.setMaximumSize(520, 640)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(select_all_user)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
 

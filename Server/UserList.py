@@ -51,7 +51,7 @@ class UserList:
         if len_path >= 5:
             print("您的照片已超过五张，无法录入")
         else:
-            file_name = user_id + '_' + current_time
+            file_name = current_time
             new_path = f"../user/{user_id}/images/{file_name}.jpg"
             cv2.imencode('.jpg', image)[1].tofile(new_path)
             print("已录入人脸")
