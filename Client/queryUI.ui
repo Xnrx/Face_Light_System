@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>select_all_user</class>
+ <widget class="QWidget" name="select_all_user">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>查看用户列表</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <item>
+    <widget class="QTableWidget" name="tableWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="horizontalScrollMode">
+      <enum>QAbstractItemView::ScrollPerItem</enum>
+     </property>
+     <property name="gridStyle">
+      <enum>Qt::NoPen</enum>
+     </property>
+     <property name="rowCount">
+      <number>4</number>
+     </property>
+     <property name="columnCount">
+      <number>4</number>
+     </property>
+     <attribute name="horizontalHeaderVisible">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="horizontalHeaderCascadingSectionResizes">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="horizontalHeaderMinimumSectionSize">
+      <number>24</number>
+     </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>110</number>
+     </attribute>
+     <attribute name="horizontalHeaderHighlightSections">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderCascadingSectionResizes">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderHighlightSections">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderStretchLastSection">
+      <bool>false</bool>
+     </attribute>
+     <row>
+      <property name="text">
+       <string>1</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>新建行</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>1</string>
+      </property>
+     </row>
+     <row/>
+     <column>
+      <property name="text">
+       <string/>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>序号</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignLeading|AlignVCenter</set>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>用户姓名</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignLeading|AlignVCenter</set>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>用户灯色</string>
+      </property>
+      <property name="font">
+       <font>
+        <kerning>true</kerning>
+       </font>
+      </property>
+      <property name="textAlignment">
+       <set>AlignLeading|AlignVCenter</set>
+      </property>
+     </column>
+     <item row="0" column="0">
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+     <item row="0" column="1">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="0" column="2">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="0" column="3">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="1" column="1">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="1" column="2">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="1" column="3">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="2" column="1">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="2" column="2">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="2" column="3">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="3" column="1">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="3" column="2">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item row="3" column="3">
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
