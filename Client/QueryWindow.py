@@ -8,9 +8,11 @@ from queryUI import Ui_select_all_user
 
 
 class QueryWindow(QDialog, Ui_select_all_user):
-    def __init__(self, parent=None):
-        super(Ui_select_all_user, self).__init__(parent)
-        self.setupUi(self)
+    def __init__(self, db):
+        super(Ui_select_all_user, self).__init__()
+        # 连接数据库
+        self.db = db
+        self.setupUi(self, self.db)
 
     def closeEvent(self, event):
         QtWidgets.QApplication.processEvents(QtCore.QEventLoop.AllEvents, 100)  # 处理所有未处理的事件

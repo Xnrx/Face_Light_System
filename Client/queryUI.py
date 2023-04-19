@@ -17,9 +17,12 @@ class MyQStandardItemModelModel(QStandardItemModel):
 
 
 class Ui_select_all_user(QtWidgets.QWidget, QStandardItemModel):
-    def setupUi(self, select_all_user):
+    def setupUi(self, select_all_user, db):
         select_all_user.setObjectName("select_all_user")
         select_all_user.resize(520, 640)
+        self._translate = QtCore.QCoreApplication.translate
+        select_all_user.setWindowTitle(self._translate("select_all_user", "查看用户列表"))
+
         # 获取屏幕大小
         screen_size = QtWidgets.QDesktopWidget().screenGeometry(-1)
         screen_width, screen_height = screen_size.width(), screen_size.height()
@@ -35,8 +38,12 @@ class Ui_select_all_user(QtWidgets.QWidget, QStandardItemModel):
         self.setGeometry(x, y, window_width, window_height)
         select_all_user.setMinimumSize(520, 640)
         select_all_user.setMaximumSize(520, 640)
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(select_all_user)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+
+        self.db = db
+
+        # 创建网格布局
+        self.gridLayout = QtWidgets.QGridLayout(select_all_user)
+        self.gridLayout.setObjectName("gridLayout")
 
         # 设置表格样式
         self.tableWidget = QTableView(select_all_user)
@@ -44,28 +51,23 @@ class Ui_select_all_user(QtWidgets.QWidget, QStandardItemModel):
         self.tableWidget.horizontalHeader().resizeSection(0, 100)
         self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.tableWidget.verticalHeader().setVisible(False)
-        self.horizontalLayout_2.addWidget(self.tableWidget)
-
-        # 连接数据库
-        self.db = Database(server='LAPTOP-NO19G1TG', user='sa', password='zhong5567', database='Python')  # 数据库初始化
-        self.db.connect()
+        self.gridLayout.addWidget(self.tableWidget, 0, 0, 1, 2)
 
         # 加载表格
-        self.set_tables(select_all_user)
+        self.set_tables()
 
+        # 设置退出按钮
         self.quit_button = QtWidgets.QPushButton(select_all_user)
         self.quit_button.setObjectName("quit_button")
         self.quit_button.setText("退出")
         self.quit_button.clicked.connect(select_all_user.close)
-        self.horizontalLayout_2.addWidget(self.quit_button)
+        self.gridLayout.addWidget(self.quit_button, 1, 1)
 
         QtCore.QMetaObject.connectSlotsByName(select_all_user)
 
-    def set_tables(self, select_all_user):
-
-        datas = self.db.query('SELECT * FROM UserSettings')
-        _translate = QtCore.QCoreApplication.translate
-        select_all_user.setWindowTitle(_translate("select_all_user", "查看用户列表"))
+    def set_tables(self):
+        self.db.connect()
+        datas = self.db.query_all_user()
 
         len_row = len(datas)
         self.model = MyQStandardItemModelModel(len_row, 5)
@@ -104,9 +106,9 @@ class Ui_select_all_user(QtWidgets.QWidget, QStandardItemModel):
             color = QColor(r, g, b)
             item_color = QStandardItem()
             item_color.setBackground(color)
-            self.model.setData(self.model.index(index, 1), _translate("select_all_user", str(Id)))
-            self.model.setData(self.model.index(index, 2), _translate("select_all_user", name))
-            self.model.setData(self.model.index(index, 3), _translate("select_all_user", rgb))
+            self.model.setData(self.model.index(index, 1), self._translate("select_all_user", str(Id)))
+            self.model.setData(self.model.index(index, 2), self._translate("select_all_user", name))
+            self.model.setData(self.model.index(index, 3), self._translate("select_all_user", rgb))
             self.model.setItem(index, 4, item_color)
 
 

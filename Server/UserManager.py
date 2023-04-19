@@ -1,3 +1,6 @@
+import os
+import time
+
 from UserList import UserList
 
 
@@ -22,6 +25,25 @@ class UserManager(UserList):
         new_user_id = self.add_user()
         new_user = self.add_user_images(image, new_user_id)
         new_user.load_user_features(modelD_path, modelR_path, input_shape)
+        self.list.append(new_user)
+
+    def add_new_user_Client(self, image, user_id, modelD_path, modelR_path, input_shape):
+        """
+        添加新用户
+        :param user_id: 用户id
+        :param input_shape: 图像格式
+        :param modelR_path: 人脸识别模型
+        :param modelD_path: 人脸检测模型
+        :param image: 新用户照片
+        :return: 新用户
+        """
+        new_user_id = user_id
+        path = f'../user/{user_id}/images/'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        new_user = self.add_user_images(image, new_user_id)
+        if new_user.file_name is not None:
+            new_user.add_user_features(modelD_path, modelR_path, input_shape)
         self.list.append(new_user)
 
     def load_images_and_features(self, modelD_path, modelR_path, input_shape):

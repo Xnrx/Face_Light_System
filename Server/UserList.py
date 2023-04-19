@@ -45,6 +45,7 @@ class UserList:
         """
 
         # 添加新用户
+        file_name = None
         len_path = self.get_user_images_len(user_id)
         now = datetime.datetime.now()
         current_time = now.strftime("%Y%m%d%H%M%S")
@@ -56,7 +57,7 @@ class UserList:
             cv2.imencode('.jpg', image)[1].tofile(new_path)
             print("已录入人脸")
 
-        return User(user_id)
+        return User(user_id, file_name=file_name)
 
     def get_user_images_len(self, user_id):
         """

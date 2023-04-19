@@ -59,7 +59,6 @@ class FaceRecognitionSystem(FaceRecognizer, ArduinoController):
         收发信号
         :param cur_user: 当前用户id
         """
-        print(cur_user.user_id)
         signal = cur_user.RGB
         if cur_user.user_id == '未检测到人脸' or cur_user.user_id == '未登记人员':
             signal = self.last_signal
