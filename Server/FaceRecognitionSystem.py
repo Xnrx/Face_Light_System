@@ -21,7 +21,7 @@ class FaceRecognitionSystem(FaceRecognizer, ArduinoController):
         self.cosine_similarity_threshold = 0.363  # 余弦相似度阈值
         self.l2_similarity_threshold = 1.128  # L2范数相似度阈值
         self.user_list = list  # 用户列表
-        self.last_signal = '055055055'
+        self.last_signal = '255255255'
 
     def recognize_user(self, image):
         """
@@ -63,7 +63,7 @@ class FaceRecognitionSystem(FaceRecognizer, ArduinoController):
         :param cur_user: 当前用户id
         """
         signal = cur_user.RGB
-        if cur_user.user_id == '未检测到人脸' or cur_user.user_id == '未登记人员':
+        if cur_user.username == '未检测到人脸' or cur_user.username == '未登记人员':
             signal = self.last_signal
         if self.serial.in_waiting:
             self.send_signal(signal)

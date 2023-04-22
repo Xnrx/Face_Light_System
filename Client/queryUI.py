@@ -67,8 +67,8 @@ class Ui_select_all_user(QtWidgets.QWidget, QStandardItemModel):
     def set_tables(self):
         datas = self.db.query_all_user()
 
-        len_row = len(datas)
-        self.model = MyQStandardItemModelModel(len_row, 5)
+        len_row = len(datas)  # 获取数据长度
+        self.model = MyQStandardItemModelModel(len_row, 6)
         self.tableWidget.setModel(self.model)
 
         # Set the text for the header items and the table items using a loop
@@ -77,27 +77,31 @@ class Ui_select_all_user(QtWidgets.QWidget, QStandardItemModel):
             item.setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
             self.model.setHorizontalHeaderItem(i, item)
 
+        # 设置表头
         self.model.setHeaderData(0, Qt.Horizontal, "")
         self.model.setHeaderData(1, Qt.Horizontal, "序号")
         self.model.setHeaderData(2, Qt.Horizontal, "用户姓名")
-        self.model.setHeaderData(3, Qt.Horizontal, "用户灯色")
-        self.model.setHeaderData(4, Qt.Horizontal, "")
-
+        self.model.setHeaderData(3, Qt.Horizontal, "色温信息")
+        self.model.setHeaderData(4, Qt.Horizontal, "亮度等级")
+        self.model.setHeaderData(5, Qt.Horizontal, "参考颜色")
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeToContents)
 
+        # 建立表格
         for i in range(len_row):
-            for j in range(4):
+            for j in range(5):
                 item = QtGui.QStandardItem()
                 self.model.setItem(i, j, item)
 
         for index, row in enumerate(datas):
             name = row[0]
             rgb = f'{row[1]:03d},{row[2]:03d},{row[3]:03d}'
-            Id = row[4]
+            Id = row[5]
+            brightness = row[4]
             r = int(row[1])
             g = int(row[2])
             b = int(row[3])
@@ -107,4 +111,5 @@ class Ui_select_all_user(QtWidgets.QWidget, QStandardItemModel):
             self.model.setData(self.model.index(index, 1), self._translate("select_all_user", str(Id)))
             self.model.setData(self.model.index(index, 2), self._translate("select_all_user", name))
             self.model.setData(self.model.index(index, 3), self._translate("select_all_user", rgb))
-            self.model.setItem(index, 4, item_color)
+            self.model.setData(self.model.index(index, 4), self._translate("select_all_user", str(brightness)))
+            self.model.setItem(index, 5, item_color)

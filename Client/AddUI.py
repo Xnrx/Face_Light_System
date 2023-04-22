@@ -30,28 +30,33 @@ class Ui_Add_User_Dialog(object):
                 # 执行其他操作
                 frame = img
                 user_name = self.input_username.text()
-                # 添加用户人脸特征向量
-                self.Sys.um.add_new_user_Client(frame, user_name, self.Sys.modelD_path, self.Sys.modelR_path,
-                                                self.Sys.input_shape)
-                self.Sys.faReSys.set_user_lists(self.Sys.um.list)
-                # 添加用户rgb值到数据库
-                if self.tabWidget.currentIndex() == 0:
-                    palette = self.rgb_show_cold_warm.palette()
-                    bg_color = palette.color(palette.Background).name()
-                    color_rgb = tuple(int(bg_color[i:i + 2], 16) for i in (1, 3, 5))
-                    R = color_rgb[0]
-                    G = color_rgb[1]
-                    B = color_rgb[2]
+                if user_name == "":
+                    print("Error:未输入用户名")
                 else:
-                    R = self.R_Content.text()
-                    G = self.G_Content.text()
-                    B = self.B_Content.text()
+                    # 添加用户人脸特征向量
+                    self.Sys.um.add_new_user_Client(frame, user_name, self.Sys.modelD_path, self.Sys.modelR_path,
+                                                    self.Sys.input_shape)
+                    self.Sys.faReSys.set_user_lists(self.Sys.um.list)
+                    # 添加用户rgb值到数据库
+                    if self.tabWidget.currentIndex() == 0:
+                        palette = self.rgb_show_cold_warm.palette()
+                        bg_color = palette.color(palette.Background).name()
+                        color_rgb = tuple(int(bg_color[i:i + 2], 16) for i in (1, 3, 5))
+                        brightness = self.horizontalSlider.value() + 1
+                        R = color_rgb[0]
+                        G = color_rgb[1]
+                        B = color_rgb[2]
+                    else:
+                        R = self.R_Content.text()
+                        G = self.G_Content.text()
+                        B = self.B_Content.text()
+                        brightness = self.horizontalSlider_2.value() + 1
 
-                self.Sys.db.insert(user_name, R, G, B)
-                # 从数据库重新加载rgb信息
-                query_all_user = self.Sys.db.query_all_user()
-                self.Sys.um.load_rgbs(query_all_user)
-                Add_User_Dialog.accept()
+                    self.Sys.db.insert(user_name, R, G, B, brightness, 0)
+                    # 从数据库重新加载rgb信息
+                    query_all_user = self.Sys.db.query_all_user()
+                    self.Sys.um.load_rgbs_brightness(query_all_user)
+                    Add_User_Dialog.accept()
             except Exception as e:
                 print("Error:", e)
 

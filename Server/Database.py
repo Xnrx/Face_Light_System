@@ -18,10 +18,10 @@ class Database:
         self.cursor = None
         self.database_name = 'UserSettings'
         self.query_all_sql = 'SELECT * FROM ' + self.database_name
-        self.query_id_sql = 'SELECT user_id FROM ' + self.database_name + ' WHERE UserName = %s'
-        self.delete_sql = 'DELETE FROM ' + self.database_name + ' WHERE user_id = %s'
-        self.update_sql = 'UPDATE ' + self.database_name + ' SET UserName = %s, R = %s, G = %s, B = %s, WHERE user_id = %s'
-        self.insert_sql = 'INSERT INTO ' + self.database_name + ' (UserName, R, G, B) VALUES (%s, %s, %s, %s)'
+        self.query_id_sql = 'SELECT Id FROM ' + self.database_name + ' WHERE UserName = %s'
+        self.delete_sql = 'DELETE FROM ' + self.database_name + ' WHERE Id = %s'
+        self.update_sql = 'UPDATE ' + self.database_name + ' SET R = %s, G = %s, B = %s, brightness = %s WHERE Id = %s'
+        self.insert_sql = 'INSERT INTO ' + self.database_name + ' (UserName, R, G, B, brightness, Id) VALUES (%s, %s, %s, %s, %s, %s)'
 
     def connect(self):
         """
@@ -70,28 +70,30 @@ class Database:
         self.cursor.execute(self.delete_sql, user_id)
         self.conn.commit()
 
-    def update(self, user_name, R, G, B, user_id):
+    def update(self, R, G, B, brightness, user_id):
         """
         更新数据
-        :param user_name: 用户名
+        :param brightness: 亮度等级
         :param R: 数据值
         :param G: 数据值
         :param B: 数据值
         :param user_id: 用户id
         """
-        self.cursor.execute(self.update_sql, (user_name, R, G, B, user_id))
+        self.cursor.execute(self.update_sql, (R, G, B, brightness, user_id))
         self.conn.commit()
 
-    def insert(self, name, R, G, B):
+    def insert(self, name, R, G, B, brightness, Id):
         """
         插入数据
+        :param Id: 用户Id
+        :param brightness: 亮度等级
         :param name: 数据名称
         :param R: 数据值
         :param G: 数据值
         :param B: 数据值
         """
         encoded_sql = self.insert_sql.encode('cp936')
-        self.cursor.execute(encoded_sql, (name, R, G, B))
+        self.cursor.execute(encoded_sql, (name, R, G, B, brightness, Id))
         self.conn.commit()
 
     def close(self):

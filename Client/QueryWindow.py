@@ -1,10 +1,33 @@
 import sys
 
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QDialog
 
 from Database import Database
 from queryUI import Ui_select_all_user
+
+
+class QueryWindowThread(QThread):
+    # 槽
+    query_window_closed = pyqtSignal()
+
+    def __init__(self, db):
+        """
+        初始化查询窗口实例
+        :param db: 数据库系统
+        """
+        super(QueryWindowThread, self).__init__()
+        self.query_window = QueryWindow(db)  # 初始化窗口ui
+        self.query_window.exec_()
+        self.is_running = False
+
+    def run(self):
+        """
+        线程执行函数
+        :return:
+        """
+        self.query_window_closed.emit()
 
 
 class QueryWindow(QDialog, Ui_select_all_user):

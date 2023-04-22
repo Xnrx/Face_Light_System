@@ -32,7 +32,7 @@ def serial_communication_thread(recognizerSys, q):
     """
     user = q.get()
     recognizerSys.receive_and_send_signal(user)
-    print(user.user_id, user.RGB)
+    print(user.username, user.RGB)
 
 
 def main():
@@ -62,7 +62,7 @@ def main():
     db = Database(server='LAPTOP-NO19G1TG', user='sa', password='zhong5567', database='Python')
     db.connect()
     result = db.query('SELECT * FROM UserSettings')
-    um.load_rgbs(result)
+    um.load_rgbs_brightness(result)
 
     while True:
         # 创建队列
@@ -95,7 +95,7 @@ def main():
             # 添加新用户
             um.add_new_user(frame, modelD_path, modelR_path, input_shape)
             recognizerSystem.set_user_lists(um.list)
-            um.load_rgbs(result)
+            um.load_rgbs_brightness(result)
         # 退出
         if k == 27:
             break

@@ -6,17 +6,18 @@ from ImageLoader import ImageLoader
 
 
 class User:
-    def __init__(self, user_id, file_name=None, rgb=None):
+    def __init__(self, user_name, file_name=None, rgb=None, brightness=None):
         """
         初始化User类的新实例。
-        :param user_id: 用户的唯一标识符。
+        :param user_name: 用户姓名。
         """
-        self.user_id = user_id
+        self.username = user_name
         self.image_loader = ImageLoader()
-        self.path = f'../user/{user_id}/images/'
+        self.path = f'../user/{user_name}/images/'
         self.features = []
         self.file_name = file_name
         self.RGB = rgb
+        self.brightness = brightness
 
     def load_user_images(self):
         """
