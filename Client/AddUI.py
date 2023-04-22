@@ -9,6 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor, QIntValidator
+from PyQt5.QtWidgets import QSlider
 
 
 class Ui_Add_User_Dialog(object):
@@ -32,10 +35,18 @@ class Ui_Add_User_Dialog(object):
                                                 self.Sys.input_shape)
                 self.Sys.faReSys.set_user_lists(self.Sys.um.list)
                 # 添加用户rgb值到数据库
-                # user_id = self.Sys.db.query_user_id(user_name)
-                R = self.R_Content.text()
-                G = self.G_Content.text()
-                B = self.B_Content.text()
+                if self.tabWidget.currentIndex() == 0:
+                    palette = self.rgb_show_cold_warm.palette()
+                    bg_color = palette.color(palette.Background).name()
+                    color_rgb = tuple(int(bg_color[i:i + 2], 16) for i in (1, 3, 5))
+                    R = color_rgb[0]
+                    G = color_rgb[1]
+                    B = color_rgb[2]
+                else:
+                    R = self.R_Content.text()
+                    G = self.G_Content.text()
+                    B = self.B_Content.text()
+
                 self.Sys.db.insert(user_name, R, G, B)
                 # 从数据库重新加载rgb信息
                 query_all_user = self.Sys.db.query_all_user()
@@ -105,88 +116,199 @@ class Ui_Add_User_Dialog(object):
 
         self.rgb_cold_warm = QtWidgets.QWidget()
         self.rgb_cold_warm.setObjectName("rgb_cold_warm")
-        self.widget = QtWidgets.QWidget(self.rgb_cold_warm)
-        self.widget.setGeometry(QtCore.QRect(30, 20, 431, 31))
-        self.widget.setObjectName("widget")
-
-        self._layout_silder = QtWidgets.QHBoxLayout(self.widget)
-        self._layout_silder.setContentsMargins(0, 0, 0, 0)
-        self._layout_silder.setObjectName("_layout_silder")
-
-        self.rgb_cold = QtWidgets.QLabel(self.widget)
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.rgb_cold_warm)
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.rgb_cold = QtWidgets.QLabel(self.rgb_cold_warm)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.rgb_cold.sizePolicy().hasHeightForWidth())
         self.rgb_cold.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
-        font.setPointSize(11)
+        font.setPointSize(14)
         self.rgb_cold.setFont(font)
         self.rgb_cold.setObjectName("rgb_cold")
-        self._layout_silder.addWidget(self.rgb_cold)
+        self.horizontalLayout.addWidget(self.rgb_cold)
 
-        self.rgbSlider = QtWidgets.QSlider(self.widget)
-        self.rgbSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.rgbSlider = QtWidgets.QSlider(self.rgb_cold_warm)
+        self.rgbSlider.setOrientation(Qt.Horizontal)
+        self.rgbSlider.setMinimum(0)
+        self.rgbSlider.setMaximum(100)
+        self.rgbSlider.valueChanged.connect(self.updateColor_CW)
         self.rgbSlider.setObjectName("rgbSlider")
-        self._layout_silder.addWidget(self.rgbSlider)
 
-        self.rgb_warm = QtWidgets.QLabel(self.widget)
+        self.horizontalLayout.addWidget(self.rgbSlider)
+        self.rgb_warm = QtWidgets.QLabel(self.rgb_cold_warm)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.rgb_warm.sizePolicy().hasHeightForWidth())
         self.rgb_warm.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(14)
         self.rgb_warm.setFont(font)
         self.rgb_warm.setObjectName("rgb_warm")
-        self._layout_silder.addWidget(self.rgb_warm)
 
+        self.horizontalLayout.addWidget(self.rgb_warm)
+        self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.rgb_show_cold_warm = QtWidgets.QLabel(self.rgb_cold_warm)
-        self.rgb_show_cold_warm.setGeometry(QtCore.QRect(30, 70, 431, 41))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.rgb_show_cold_warm.sizePolicy().hasHeightForWidth())
+
+        self.rgb_show_cold_warm.setSizePolicy(sizePolicy)
         self.rgb_show_cold_warm.setText("")
         self.rgb_show_cold_warm.setObjectName("rgb_show_cold_warm")
-        self.tabWidget.addTab(self.rgb_cold_warm, "")
+        self.rgb_show_cold_warm.setMinimumSize(QtCore.QSize(560, 16777215))
+        self.verticalLayout_2.addWidget(self.rgb_show_cold_warm)
+        self.horizontalLayout_4.addLayout(self.verticalLayout_2)
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
 
+        self.brightness = QtWidgets.QLabel(self.rgb_cold_warm)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.brightness.sizePolicy().hasHeightForWidth())
+        self.brightness.setSizePolicy(sizePolicy)
+        self.brightness.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+
+        self.brightness.setFont(font)
+        self.brightness.setObjectName("brightness")
+        self.horizontalLayout_2.addWidget(self.brightness)
+
+        self.horizontalSlider = QtWidgets.QSlider(self.rgb_cold_warm)
+        self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.horizontalSlider.setRange(0, 4)
+        self.horizontalSlider.setTickPosition(QSlider.TicksBothSides)
+        self.horizontalSlider.setTickInterval(1)
+        self.horizontalSlider.valueChanged.connect(self.updateColor_Brightness_1)
+        self.horizontalSlider.setObjectName("horizontalSlider")
+
+        self.horizontalLayout_2.addWidget(self.horizontalSlider)
+        self.verticalLayout_4.addLayout(self.horizontalLayout_2)
+        self.rgb_show_brightness = QtWidgets.QLabel(self.rgb_cold_warm)
+        self.rgb_show_brightness.setMinimumSize(QtCore.QSize(180, 0))
+        self.rgb_show_brightness.setText("")
+        self.rgb_show_brightness.setObjectName("rgb_show_brightness")
+        self.verticalLayout_4.addWidget(self.rgb_show_brightness)
+        self.horizontalLayout_4.addLayout(self.verticalLayout_4)
+        self.tabWidget.addTab(self.rgb_cold_warm, "")
         self.rgb_customize = QtWidgets.QWidget()
         self.rgb_customize.setObjectName("rgb_customize")
-        self.rgb_show_2 = QtWidgets.QLabel(self.rgb_customize)
-        self.rgb_show_2.setGeometry(QtCore.QRect(40, 70, 401, 41))
-        self.rgb_show_2.setText("")
-        self.rgb_show_2.setObjectName("rgb_show_2")
-
-        self.widget1 = QtWidgets.QWidget(self.rgb_customize)
-        self.widget1.setGeometry(QtCore.QRect(40, 20, 401, 41))
-        self.widget1.setObjectName("widget1")
-
-        self.rgb_input = QtWidgets.QHBoxLayout(self.widget1)
-        self.rgb_input.setContentsMargins(0, 0, 0, 0)
-        self.rgb_input.setObjectName("rgb_input")
-
-        self.R = QtWidgets.QLabel(self.widget1)
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.rgb_customize)
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.R = QtWidgets.QLabel(self.rgb_customize)
         self.R.setMaximumSize(QtCore.QSize(20, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.R.setFont(font)
         self.R.setObjectName("R")
-        self.rgb_input.addWidget(self.R)
-        self.R_Content = QtWidgets.QLineEdit(self.widget1)
-        self.R_Content.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.horizontalLayout_3.addWidget(self.R)
+        self.R_Content = QtWidgets.QLineEdit(self.rgb_customize)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.R_Content.sizePolicy().hasHeightForWidth())
+        self.R_Content.setSizePolicy(sizePolicy)
+        self.R_Content.setMaximumSize(QtCore.QSize(160, 16777215))
         self.R_Content.setObjectName("R_Content")
-        self.rgb_input.addWidget(self.R_Content)
-        self.G = QtWidgets.QLabel(self.widget1)
+        self.horizontalLayout_3.addWidget(self.R_Content)
+        self.G = QtWidgets.QLabel(self.rgb_customize)
         self.G.setMaximumSize(QtCore.QSize(20, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(12)
         self.G.setFont(font)
         self.G.setObjectName("G")
-        self.rgb_input.addWidget(self.G)
-        self.G_Content = QtWidgets.QLineEdit(self.widget1)
-        self.G_Content.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.horizontalLayout_3.addWidget(self.G)
+        self.G_Content = QtWidgets.QLineEdit(self.rgb_customize)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.G_Content.sizePolicy().hasHeightForWidth())
+        self.G_Content.setSizePolicy(sizePolicy)
+        self.G_Content.setMaximumSize(QtCore.QSize(160, 16777215))
         self.G_Content.setObjectName("G_Content")
-        self.rgb_input.addWidget(self.G_Content)
-        self.B = QtWidgets.QLabel(self.widget1)
+        self.horizontalLayout_3.addWidget(self.G_Content)
+        self.B = QtWidgets.QLabel(self.rgb_customize)
         self.B.setMaximumSize(QtCore.QSize(20, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(12)
         self.B.setFont(font)
         self.B.setObjectName("B")
-        self.rgb_input.addWidget(self.B)
-        self.B_Content = QtWidgets.QLineEdit(self.widget1)
-        self.B_Content.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.horizontalLayout_3.addWidget(self.B)
+        self.B_Content = QtWidgets.QLineEdit(self.rgb_customize)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.B_Content.sizePolicy().hasHeightForWidth())
+        self.B_Content.setSizePolicy(sizePolicy)
+        self.B_Content.setMaximumSize(QtCore.QSize(160, 16777215))
         self.B_Content.setObjectName("B_Content")
-        self.rgb_input.addWidget(self.B_Content)
+        self.horizontalLayout_3.addWidget(self.B_Content)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_3)
+        self.rgb_show_2 = QtWidgets.QLabel(self.rgb_customize)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.rgb_show_2.sizePolicy().hasHeightForWidth())
+        self.rgb_show_2.setSizePolicy(sizePolicy)
+        self.rgb_show_2.setMinimumSize(QtCore.QSize(0, 0))
+        self.rgb_show_2.setText("")
+        self.rgb_show_2.setObjectName("rgb_show_2")
+        self.verticalLayout_3.addWidget(self.rgb_show_2)
+        self.horizontalLayout_6.addLayout(self.verticalLayout_3)
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.brightness_2 = QtWidgets.QLabel(self.rgb_customize)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.brightness_2.sizePolicy().hasHeightForWidth())
+        self.brightness_2.setSizePolicy(sizePolicy)
+        self.brightness_2.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.brightness_2.setFont(font)
+        self.brightness_2.setObjectName("brightness_2")
+        self.horizontalLayout_5.addWidget(self.brightness_2)
+        self.horizontalSlider_2 = QtWidgets.QSlider(self.rgb_customize)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.horizontalSlider_2.sizePolicy().hasHeightForWidth())
 
+        self.horizontalSlider_2.setSizePolicy(sizePolicy)
+        self.horizontalSlider_2.setOrientation(QtCore.Qt.Horizontal)
+        self.horizontalSlider_2.setObjectName("horizontalSlider_2")
+        self.horizontalSlider_2.setRange(0, 4)
+        self.horizontalSlider_2.setTickPosition(QSlider.TicksBothSides)
+        self.horizontalSlider_2.setTickInterval(1)
+        self.horizontalSlider_2.valueChanged.connect(self.updateColor_Brightness_2)
+
+        self.horizontalLayout_5.addWidget(self.horizontalSlider_2)
+        self.verticalLayout_5.addLayout(self.horizontalLayout_5)
+        self.rgb_show_brightness_2 = QtWidgets.QLabel(self.rgb_customize)
+        self.rgb_show_brightness_2.setMinimumSize(QtCore.QSize(180, 0))
+        self.rgb_show_brightness_2.setText("")
+        self.rgb_show_brightness_2.setObjectName("rgb_show_brightness_2")
+        self.verticalLayout_5.addWidget(self.rgb_show_brightness_2)
+        self.horizontalLayout_6.addLayout(self.verticalLayout_5)
         self.tabWidget.addTab(self.rgb_customize, "")
         self.verticalLayout.addWidget(self.tabWidget)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 2, 1)
@@ -206,16 +328,31 @@ class Ui_Add_User_Dialog(object):
         font = QtGui.QFont()
         font.setPointSize(12)
         self.buttonBox.setFont(font)
-        self.buttonBox.setOrientation(QtCore.Qt.Vertical)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setOrientation(Qt.Vertical)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setCenterButtons(False)
         self.buttonBox.setObjectName("buttonBox")
         self.gridLayout.addWidget(self.buttonBox, 1, 2, 1, 1)
 
         self.retranslateUi(Add_User_Dialog)
-        self.tabWidget.setCurrentIndex(1)
         self.buttonBox.accepted.connect(on_accept)
         self.buttonBox.rejected.connect(Add_User_Dialog.reject)
+
+        # 创建一个QIntValidator，限制输入范围在0到255之间
+        validator = QIntValidator(0, 255)
+        self.R_Content.setValidator(validator)
+        self.G_Content.setValidator(validator)
+        self.B_Content.setValidator(validator)
+
+        self.R_Content.setText('0')
+        self.G_Content.setText('0')
+        self.B_Content.setText('0')
+        self.R_Content.textChanged.connect(
+            lambda: self.update_color([self.R_Content, self.G_Content, self.B_Content], self.rgb_show_2))
+        self.G_Content.textChanged.connect(
+            lambda: self.update_color([self.R_Content, self.G_Content, self.B_Content], self.rgb_show_2))
+        self.B_Content.textChanged.connect(
+            lambda: self.update_color([self.R_Content, self.G_Content, self.B_Content], self.rgb_show_2))
 
         QtCore.QMetaObject.connectSlotsByName(Add_User_Dialog)
 
@@ -226,10 +363,94 @@ class Ui_Add_User_Dialog(object):
         self.label_personalized.setText(_translate("Add_User_Dialog", "个性化：灯光色温"))
         self.rgb_cold.setText(_translate("Add_User_Dialog", "冷色"))
         self.rgb_warm.setText(_translate("Add_User_Dialog", "暖色"))
+        self.brightness.setText(_translate("Add_User_Dialog", "亮度："))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.rgb_cold_warm), _translate("Add_User_Dialog", "冷暖色调"))
         self.R.setText(_translate("Add_User_Dialog", "R"))
         self.G.setText(_translate("Add_User_Dialog", "G"))
         self.B.setText(_translate("Add_User_Dialog", "B"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.rgb_customize), _translate("Add_User_Dialog", "自定义颜色"))
+        self.brightness_2.setText(_translate("Add_User_Dialog", "亮度："))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.rgb_customize),
+                                  _translate("Add_User_Dialog", "自定义颜色"))
+        self.rgb_show_cold_warm.setStyleSheet("background-color: white;")
+        self.rgb_show_brightness.setStyleSheet("background-color: white;")
+        self.rgb_show_2.setStyleSheet("background-color: white;")
+        self.rgb_show_brightness_2.setStyleSheet("background-color: white;")
+        self.rgbSlider.setValue(50)
+        self.horizontalSlider.setValue(2)
+        self.horizontalSlider_2.setValue(2)
 
+    def updateColor_CW(self, value):
+        # 暖色调灯光的RGB值
+        warm_red = 255
+        warm_green = 255 - int((50 - value) * 4.4)
+        warm_blue = 0
 
+        # 冷色调灯光的RGB值
+        cold_red = 255 - int((value - 50) * 4.4)
+        cold_green = 255
+        cold_blue = 255
+
+        # 根据value值选择冷暖色调
+        if value < 50:
+            color = QColor(warm_red, warm_green, warm_blue)  # 暖色调
+        else:
+            color = QColor(cold_red, cold_green, cold_blue)  # 冷色调
+
+        color_rgb = tuple(int(color.name()[i:i + 2], 16) for i in (1, 3, 5))
+        print(color_rgb)  # 输出结果为 (255, 0, 0)
+
+        self.rgb_show_cold_warm.setStyleSheet("background-color: %s;" % color.name())
+
+    def update_color(self, rgb_edit_widgets, color_label):
+        # 从三个LineEdit读取RGB值
+        r = rgb_edit_widgets[0].text()
+        g = rgb_edit_widgets[1].text()
+        b = rgb_edit_widgets[2].text()
+
+        # 将RGB值转换为QColor对象
+        color = QColor(int(r), int(g), int(b))
+
+        # 在GUI中显示颜色
+        color_label.setStyleSheet("background-color: {}".format(color.name()))
+
+    def updateColor_Brightness_1(self, value):
+        val = 1
+        if value == 4:
+            val = 1
+        elif value == 3:
+            val = 0.9
+        elif value == 2:
+            val = 0.8
+        elif value == 1:
+            val = 0.7
+        elif value == 0:
+            val = 0.6
+
+        red = int(255 * val)
+        green = int(255 * val)
+        blue = int(255 * val)
+
+        color = QColor(red, green, blue)  # 暖色调
+
+        self.rgb_show_brightness.setStyleSheet("background-color: %s;" % color.name())
+
+    def updateColor_Brightness_2(self, value):
+        val = 1
+        if value == 4:
+            val = 1
+        elif value == 3:
+            val = 0.9
+        elif value == 2:
+            val = 0.8
+        elif value == 1:
+            val = 0.7
+        elif value == 0:
+            val = 0.6
+
+        red = int(255 * val)
+        green = int(255 * val)
+        blue = int(255 * val)
+
+        color = QColor(red, green, blue)  # 暖色调
+
+        self.rgb_show_brightness_2.setStyleSheet("background-color: %s;" % color.name())

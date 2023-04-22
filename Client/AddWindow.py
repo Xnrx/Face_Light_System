@@ -1,7 +1,7 @@
 import sys
 
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QDialog, QWidget
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QDialog
 
 from AddUI import Ui_Add_User_Dialog
 

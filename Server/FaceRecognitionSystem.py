@@ -1,6 +1,7 @@
 import cv2  # 导入OpenCV库。
-from FaceRecognizer import FaceRecognizer  # 导入FaceRecognizer类。
+
 from ArduinoController import ArduinoController  # 导入ArduinoController类。
+from FaceRecognizer import FaceRecognizer  # 导入FaceRecognizer类。
 from User import User
 
 
@@ -20,7 +21,7 @@ class FaceRecognitionSystem(FaceRecognizer, ArduinoController):
         self.cosine_similarity_threshold = 0.363  # 余弦相似度阈值
         self.l2_similarity_threshold = 1.128  # L2范数相似度阈值
         self.user_list = list  # 用户列表
-        self.last_signal = '123254255'
+        self.last_signal = '055055055'
 
     def recognize_user(self, image):
         """
@@ -38,8 +39,10 @@ class FaceRecognitionSystem(FaceRecognizer, ArduinoController):
         else:
             for user in self.user_list:  # 遍历用户列表。
                 for feature2 in user.features:  # 遍历当前用户的特征向量列表。
-                    similarity_cosine = self.recognizer.match(feature1, feature2, cv2.FaceRecognizerSF_FR_COSINE)  # 计算余弦相似度得分。
-                    similarity_l2 = self.recognizer.match(feature1, feature2, cv2.FaceRecognizerSF_FR_NORM_L2)  # 计算L2范数相似度得分。
+                    similarity_cosine = self.recognizer.match(feature1, feature2,
+                                                              cv2.FaceRecognizerSF_FR_COSINE)  # 计算余弦相似度得分。
+                    similarity_l2 = self.recognizer.match(feature1, feature2,
+                                                          cv2.FaceRecognizerSF_FR_NORM_L2)  # 计算L2范数相似度得分。
                     if similarity_cosine >= self.cosine_similarity_threshold or similarity_l2 <= self.l2_similarity_threshold:  # 如果相似度得分大于阈值。
                         if similarity_cosine > best_match_score:  # 如果余弦相似度得分大于最高得分。
                             best_match_user = user  # 将当前用户设置为最相似的用户。
@@ -66,4 +69,3 @@ class FaceRecognitionSystem(FaceRecognizer, ArduinoController):
             self.send_signal(signal)
             self.receive_signal('utf-8')
         self.last_signal = signal
-

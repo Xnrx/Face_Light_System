@@ -1,6 +1,5 @@
-import time
-
 import serial
+
 from IArduinoController import IArduinoController
 
 

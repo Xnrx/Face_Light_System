@@ -1,15 +1,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QColor, QStandardItem
-from PyQt5.QtWidgets import QHeaderView, QTableView, QFrame
-
-from Database import Database
+from PyQt5.QtWidgets import QHeaderView, QTableView
 
 
 class MyQStandardItemModelModel(QStandardItemModel):
     """
     重写QStandardItemModel的data函数，使QTableView全部item居中
     """
+
     def data(self, index, role=None):
         if role == Qt.TextAlignmentRole:
             return Qt.AlignCenter
@@ -66,7 +65,6 @@ class Ui_select_all_user(QtWidgets.QWidget, QStandardItemModel):
         QtCore.QMetaObject.connectSlotsByName(select_all_user)
 
     def set_tables(self):
-        self.db.connect()
         datas = self.db.query_all_user()
 
         len_row = len(datas)
@@ -110,5 +108,3 @@ class Ui_select_all_user(QtWidgets.QWidget, QStandardItemModel):
             self.model.setData(self.model.index(index, 2), self._translate("select_all_user", name))
             self.model.setData(self.model.index(index, 3), self._translate("select_all_user", rgb))
             self.model.setItem(index, 4, item_color)
-
-

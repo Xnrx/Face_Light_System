@@ -1,12 +1,13 @@
 import queue
 import threading
+
 import cv2
 
 from CameraSelector import CameraSelector
+from Database import Database
 from FaceRecognitionSystem import FaceRecognitionSystem
 from ThreadManager import ThreadManager
 from UserManager import UserManager
-from Database import Database
 
 frame_lock = threading.Lock()
 

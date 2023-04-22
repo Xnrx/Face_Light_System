@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from numpy import unicode
 
 from FaceRecognizer import FaceRecognizer
 from ImageLoader import ImageLoader

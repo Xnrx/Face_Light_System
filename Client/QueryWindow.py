@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QDialog, QWidget
+from PyQt5.QtWidgets import QDialog
 
 from Database import Database
 from queryUI import Ui_select_all_user
