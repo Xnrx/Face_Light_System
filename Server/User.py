@@ -18,6 +18,9 @@ class User:
         self.file_name = file_name
         self.RGB = rgb
         self.brightness = brightness
+        self.True_RGB = None
+        self.current_index = None
+        self.cold_warm_value = None
 
     def load_user_images(self):
         """

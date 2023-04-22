@@ -16,6 +16,10 @@ class UserList:
         self.path = path
         self.list = list
         self.rgb_dic = {}
+        self.true_rgb_dic = {}
+        self.bright_dic = {}
+        self.cold_warm_value_dic = {}
+        self.current_index_dic = {}
 
     def load(self):
         """

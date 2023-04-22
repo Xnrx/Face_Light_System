@@ -33,10 +33,6 @@ class Ui_Add_User_Dialog(object):
                 if user_name == "":
                     print("Error:未输入用户名")
                 else:
-                    # 添加用户人脸特征向量
-                    self.Sys.um.add_new_user_Client(frame, user_name, self.Sys.modelD_path, self.Sys.modelR_path,
-                                                    self.Sys.input_shape)
-                    self.Sys.faReSys.set_user_lists(self.Sys.um.list)
                     # 添加用户rgb值到数据库
                     if self.tabWidget.currentIndex() == 0:
                         palette = self.rgb_show_cold_warm.palette()
@@ -51,11 +47,15 @@ class Ui_Add_User_Dialog(object):
                         G = self.G_Content.text()
                         B = self.B_Content.text()
                         brightness = self.horizontalSlider_2.value() + 1
-
-                    self.Sys.db.insert(user_name, R, G, B, brightness, 0)
+                    self.Sys.db.insert(user_name, R, G, B, brightness, 0, self.tabWidget.currentIndex(), self.rgbSlider.value())
+                    # 添加用户人脸特征向量
+                    self.Sys.um.add_new_user_Client(frame, user_name, self.Sys.modelD_path, self.Sys.modelR_path,
+                                                    self.Sys.input_shape, self.tabWidget.currentIndex(),
+                                                    self.rgbSlider.value(), brightness)
+                    self.Sys.faReSys.set_user_lists(self.Sys.um.list)
                     # 从数据库重新加载rgb信息
                     query_all_user = self.Sys.db.query_all_user()
-                    self.Sys.um.load_rgbs_brightness(query_all_user)
+                    self.Sys.um.load_user_infos(query_all_user)
                     Add_User_Dialog.accept()
             except Exception as e:
                 print("Error:", e)
@@ -127,6 +127,27 @@ class Ui_Add_User_Dialog(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
+
+        self.rgb_warm = QtWidgets.QLabel(self.rgb_cold_warm)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.rgb_warm.sizePolicy().hasHeightForWidth())
+        self.rgb_warm.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.rgb_warm.setFont(font)
+        self.rgb_warm.setObjectName("rgb_warm")
+        self.horizontalLayout.addWidget(self.rgb_warm)
+
+        self.rgbSlider = QtWidgets.QSlider(self.rgb_cold_warm)
+        self.rgbSlider.setOrientation(Qt.Horizontal)
+        self.rgbSlider.setMinimum(0)
+        self.rgbSlider.setMaximum(100)
+        self.rgbSlider.valueChanged.connect(self.updateColor_CW)
+        self.rgbSlider.setObjectName("rgbSlider")
+        self.horizontalLayout.addWidget(self.rgbSlider)
+
         self.rgb_cold = QtWidgets.QLabel(self.rgb_cold_warm)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -139,26 +160,6 @@ class Ui_Add_User_Dialog(object):
         self.rgb_cold.setObjectName("rgb_cold")
         self.horizontalLayout.addWidget(self.rgb_cold)
 
-        self.rgbSlider = QtWidgets.QSlider(self.rgb_cold_warm)
-        self.rgbSlider.setOrientation(Qt.Horizontal)
-        self.rgbSlider.setMinimum(0)
-        self.rgbSlider.setMaximum(100)
-        self.rgbSlider.valueChanged.connect(self.updateColor_CW)
-        self.rgbSlider.setObjectName("rgbSlider")
-
-        self.horizontalLayout.addWidget(self.rgbSlider)
-        self.rgb_warm = QtWidgets.QLabel(self.rgb_cold_warm)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.rgb_warm.sizePolicy().hasHeightForWidth())
-        self.rgb_warm.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.rgb_warm.setFont(font)
-        self.rgb_warm.setObjectName("rgb_warm")
-
-        self.horizontalLayout.addWidget(self.rgb_warm)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.rgb_show_cold_warm = QtWidgets.QLabel(self.rgb_cold_warm)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
@@ -381,8 +382,8 @@ class Ui_Add_User_Dialog(object):
         self.rgb_show_2.setStyleSheet("background-color: white;")
         self.rgb_show_brightness_2.setStyleSheet("background-color: white;")
         self.rgbSlider.setValue(50)
-        self.horizontalSlider.setValue(2)
-        self.horizontalSlider_2.setValue(2)
+        self.horizontalSlider.setValue(3)
+        self.horizontalSlider_2.setValue(3)
 
     def updateColor_CW(self, value):
         # 暖色调灯光的RGB值
@@ -401,9 +402,6 @@ class Ui_Add_User_Dialog(object):
         else:
             color = QColor(cold_red, cold_green, cold_blue)  # 冷色调
 
-        color_rgb = tuple(int(color.name()[i:i + 2], 16) for i in (1, 3, 5))
-        print(color_rgb)  # 输出结果为 (255, 0, 0)
-
         self.rgb_show_cold_warm.setStyleSheet("background-color: %s;" % color.name())
 
     def update_color(self, rgb_edit_widgets, color_label):
@@ -420,15 +418,15 @@ class Ui_Add_User_Dialog(object):
 
     def updateColor_Brightness_1(self, value):
         val = 1
-        if value == 4:
+        if value == 5:
             val = 1
-        elif value == 3:
+        elif value == 4:
             val = 0.9
-        elif value == 2:
+        elif value == 3:
             val = 0.8
-        elif value == 1:
+        elif value == 2:
             val = 0.7
-        elif value == 0:
+        elif value == 1:
             val = 0.6
 
         red = int(255 * val)
@@ -441,15 +439,15 @@ class Ui_Add_User_Dialog(object):
 
     def updateColor_Brightness_2(self, value):
         val = 1
-        if value == 4:
+        if value == 5:
             val = 1
-        elif value == 3:
+        elif value == 4:
             val = 0.9
-        elif value == 2:
+        elif value == 3:
             val = 0.8
-        elif value == 1:
+        elif value == 2:
             val = 0.7
-        elif value == 0:
+        elif value == 1:
             val = 0.6
 
         red = int(255 * val)

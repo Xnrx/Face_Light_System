@@ -31,4 +31,4 @@ class InitRecognizerSys(FaceRecognizer, ArduinoController):
         self.um.load_images_and_features(self.modelD_path, self.modelR_path, self.input_shape)
         self.db.connect()
         self.query_all_user = self.db.query_all_user()
-        self.um.load_rgbs_brightness(self.query_all_user)
+        self.um.load_user_infos(self.query_all_user)

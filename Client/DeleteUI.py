@@ -26,7 +26,7 @@ class Ui_Dialog(object):
             self.Sys.db.delete(Id[0])
             # 从数据库重新加载rgb信息
             query_all_user = self.Sys.db.query_all_user()
-            self.Sys.um.load_rgbs_brightness(query_all_user)
+            self.Sys.um.load_user_infos(query_all_user)
             Dialog.accept()
 
         Dialog.setObjectName("Dialog")

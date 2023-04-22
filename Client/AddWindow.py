@@ -11,7 +11,7 @@ from AddUI import Ui_Add_User_Dialog
 class AddWindowThread(QThread):
     add_window_closed = pyqtSignal()
 
-    def __init__(self, img, Sys):
+    def __init__(self, Sys, img):
         """
         初始化添加窗口的线程实例
         :param img: 要传进去的图像
@@ -41,9 +41,3 @@ class AddWindow(QDialog, Ui_Add_User_Dialog):
             print("关闭事件被接受")
         event.accept()
 
-
-if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)  # 固定的，表示程序应用
-    ui = AddWindow()  # 实例化Ui_MainWindow
-    ui.show()  # 调用ui的show()以显示。同样show()是源于父类QtWidgets.QWidget的
-    sys.exit(app.exec_())  # 不加这句，程序界面会一闪而过

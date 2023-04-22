@@ -8,6 +8,7 @@ from DeleteWindow import DeleteWindowThread
 from InitRecognizerSys import InitRecognizerSys
 from QueryWindow import QueryWindowThread
 from UI__MainWindow import Ui__MainWindow
+from UpdateWindow import UpdateWindowThread
 
 
 class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
@@ -34,7 +35,10 @@ class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
         self.button_open_camera.clicked.connect(self.button_open_or_close_camera_clicked)
         self.button_add_user.clicked.connect(self.button_add_user_clicked)
         self.button_delete_user.clicked.connect(self.button_delete_user_clicked)
+        self.button_update_user.clicked.connect(self.button_update_user_clicked)
         self.button_add_user.setEnabled(False)
+        self.button_update_user.setEnabled(False)
+        self.button_delete_user.setEnabled(False)
 
     # 添加窗口
     def button_add_user_clicked(self):
@@ -50,7 +54,7 @@ class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
         self.label_show_id.clear()
         self.button_open_camera.setText('打开摄像头')
         # 添加窗口线程打开
-        self.add_thread = AddWindowThread(self.camera_thread.image, self.Sys)
+        self.add_thread = AddWindowThread(self.Sys, self.camera_thread.image)
         self.add_thread.add_window_closed.connect(self.on_add_window_closed)
         self.add_thread.start()
 
@@ -89,6 +93,38 @@ class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
         self.delete_thread.quit()
         self.delete_thread.wait()
 
+    def button_update_user_clicked(self):
+        """
+        修改窗口按钮打开事件
+        在添加窗口打开时关闭camera线程，关闭时打开camera线程，防止线程冲突
+        :return:
+        """
+        # 暂时关闭线程
+        self.camera_thread.stop()
+        self.camera_thread.image_updated.disconnect(self.update_image_handle_com_and_buttons)  # 槽断开连接信号
+        self.label_show_camera.clear()
+        self.label_show_id.clear()
+        self.button_open_camera.setText('打开摄像头')
+        # 添加窗口线程打开
+        self.update_thread = UpdateWindowThread(self.Sys, self.camera_thread.image, self.camera_thread.user.username)
+        self.update_thread.update_window_closed.connect(self.on_update_window_closed)
+        self.update_thread.start()
+
+    def on_update_window_closed(self):
+        """
+        添加窗口按钮关闭事件
+        :return:
+        """
+        # 打开线程
+        self.camera_thread.image_updated.connect(self.update_image_handle_com_and_buttons)  # 槽连接信号
+        self.camera_thread.is_running = True
+        self.camera_thread.start()
+        self.button_open_camera.setText('关闭摄像头')
+        # 添加窗口线程关闭
+        self.update_thread.quit()
+        self.update_thread.wait()
+
+    # 查询窗口
     def button_query_user_clicked(self):
         """查询窗口按钮打开事件"""
         self.query_thread = QueryWindowThread(self.db)
@@ -137,6 +173,13 @@ class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
             self.button_add_user.setEnabled(True)
         else:
             self.button_add_user.setEnabled(False)
+
+        if self.camera_thread.user.username == '未登记人员' or self.camera_thread.user.username == '未检测到人脸':
+            self.button_update_user.setEnabled(False)
+            self.button_delete_user.setEnabled(False)
+        else:
+            self.button_update_user.setEnabled(True)
+            self.button_delete_user.setEnabled(True)
 
         self.faceSys.receive_and_send_signal(self.camera_thread.user)
 
