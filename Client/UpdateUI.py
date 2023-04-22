@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QIntValidator
-from PyQt5.QtWidgets import QSlider
+from PyQt5.QtWidgets import QSlider, QVBoxLayout, QRadioButton
 
 
 class Ui_Update_User_Dialog(object):
@@ -39,11 +39,10 @@ class Ui_Update_User_Dialog(object):
             try:
                 # 执行其他操作
                 frame = img
-
-                # 添加用户人脸特征向量
-                # self.Sys.um.add_new_user_Client(frame, user_name, self.Sys.modelD_path, self.Sys.modelR_path,
-                #                                 self.Sys.input_shape)
-                # self.Sys.faReSys.set_user_lists(self.Sys.um.list)
+                if self.rb1.isCheckable():
+                    # 添加用户人脸特征向量
+                    self.Sys.um.add_new_user_Client_only_image(frame, matched_user, self.Sys.modelD_path, self.Sys.modelR_path,
+                                                    self.Sys.input_shape)
                 # 添加用户rgb值到数据库
                 R = None
                 G = None
@@ -97,6 +96,13 @@ class Ui_Update_User_Dialog(object):
         self.label_face_img.setSizePolicy(sizePolicy)
         self.label_face_img.setObjectName("label_face_img")
         self.verticalLayout.addWidget(self.label_face_img)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        # 创建三个 QRadioButton 对象，并添加到 QVBoxLayout 中
+        self.rb1 = QRadioButton('添加照片')
+        self.rb1.setFont(font)
+
+        self.verticalLayout.addWidget(self.rb1)
 
         self._layout_username = QtWidgets.QHBoxLayout()
         self._layout_username.setObjectName("_layout_username")

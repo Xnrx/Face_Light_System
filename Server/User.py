@@ -6,7 +6,7 @@ from ImageLoader import ImageLoader
 
 
 class User:
-    def __init__(self, user_name, file_name=None, rgb=None, brightness=None):
+    def __init__(self, user_name, rgb=None, brightness=None):
         """
         初始化User类的新实例。
         :param user_name: 用户姓名。
@@ -15,7 +15,6 @@ class User:
         self.image_loader = ImageLoader()
         self.path = f'../user/{user_name}/images/'
         self.features = []
-        self.file_name = file_name
         self.RGB = rgb
         self.brightness = brightness
         self.True_RGB = None
@@ -43,14 +42,15 @@ class User:
             feature = recognizer.recognize_face(image)
             self.features.append(feature)
 
-    def add_user_features(self, modelD_path, modelR_path, input_shape):
+    def add_user_features(self, modelD_path, modelR_path, input_shape, file_name):
         """
         添加用户的人脸特征向量。
+        :param file_name: 文件名
         :param modelD_path: 人脸检测模型文件的路径。
         :param modelR_path: 人脸识别模型文件的路径。
         :param input_shape: 图像文件的统一尺寸
         """
-        pic_name = self.path + self.file_name + '.jpg'
+        pic_name = self.path + file_name + '.jpg'
         img = cv2.imdecode(np.fromfile(pic_name, dtype=np.uint8), -1)
         recognizer = FaceRecognizer(modelD_path, modelR_path, input_shape)
         feature = recognizer.recognize_face(img)

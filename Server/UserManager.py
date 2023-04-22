@@ -23,7 +23,7 @@ class UserManager(UserList):
         :return: 新用户
         """
         new_user_name = self.add_user()
-        new_user = self.add_user_images(image, new_user_name)
+        new_user = self.add_new_user_images(image, new_user_name)
         new_user.load_user_features(modelD_path, modelR_path, input_shape)
         self.list.append(new_user)
 
@@ -44,13 +44,34 @@ class UserManager(UserList):
         path = f'../user/{user_name}/images/'
         if not os.path.exists(path):
             os.makedirs(path)
-        new_user = self.add_user_images(image, new_user_name)
+
+        new_user, file_name = self.add_new_user_images(image, new_user_name)
+
         new_user.brightness = brightness
         new_user.current_index = current_index
         new_user.cold_warm_value = warm_cold_value
-        if new_user.file_name is not None:
-            new_user.add_user_features(modelD_path, modelR_path, input_shape)
+
+        if file_name is not None:
+            new_user.add_user_features(modelD_path, modelR_path, input_shape, file_name)
         self.list.append(new_user)
+
+    def add_new_user_Client_only_image(self, image, user, modelD_path, modelR_path, input_shape):
+        """
+        添加用户的新照片
+        :param user: 用户
+        :param input_shape: 图像格式
+        :param modelR_path: 人脸识别模型
+        :param modelD_path: 人脸检测模型
+        :param image: 新用户照片
+        :return: 新用户
+        """
+        user_name = user.username
+        path = f'../user/{user_name}/images/'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        file_name = self.add_user_only_image(image, user_name)
+        if file_name is not None:
+            user.add_user_features(modelD_path, modelR_path, input_shape, file_name)
 
     def remove_user_Client(self, user_name):
         """

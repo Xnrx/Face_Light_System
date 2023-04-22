@@ -40,7 +40,7 @@ class UserList:
             os.makedirs(path)
         return user_id
 
-    def add_user_images(self, image, user_id):
+    def add_new_user_images(self, image, user_id):
         """
         添加用户
         :param user_id: 要添加的用户的id
@@ -61,7 +61,30 @@ class UserList:
             cv2.imencode('.jpg', image)[1].tofile(new_path)
             print("已录入人脸")
 
-        return User(user_id, file_name=file_name)
+        return User(user_id), file_name
+
+    def add_user_only_image(self, image, user_id):
+        """
+        添加用户
+        :param user_id: 要添加的用户的id
+        :param image: 要添加的用户的照片
+        :return: 新用户
+        """
+
+        # 添加新用户
+        file_name = None
+        len_path = self.get_user_images_len(user_id)
+        now = datetime.datetime.now()
+        current_time = now.strftime("%Y%m%d%H%M%S")
+        if len_path >= 5:
+            print("您的照片已超过五张，无法录入")
+        else:
+            file_name = current_time
+            new_path = f"../user/{user_id}/images/{file_name}.jpg"
+            cv2.imencode('.jpg', image)[1].tofile(new_path)
+            print("已录入人脸")
+
+        return file_name
 
     def get_user_images_len(self, user_id):
         """
