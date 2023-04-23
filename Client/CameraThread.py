@@ -5,7 +5,7 @@ from CameraSelector import CameraSelector
 
 
 class CameraThread(QtCore.QThread):
-    # 槽
+    # 信号
     image_updated = QtCore.pyqtSignal(QtGui.QImage)
 
     def __init__(self, camera_index, url, Sys):
@@ -32,7 +32,7 @@ class CameraThread(QtCore.QThread):
         线程执行函数
         :return:
         """
-        self.caS = CameraSelector('local', self.camera_index, self.url)  # 选择摄像头
+        self.caS = CameraSelector('ip', self.camera_index, self.url)  # 选择摄像头
         self.cap = self.caS.camera
         if not self.faceSys.serial.isOpen():  # 检测摄像头状态
             self.faceSys.serial.open()

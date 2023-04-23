@@ -160,7 +160,7 @@ class MainWindow(Ui__MainWindow, QtWidgets.QWidget):
 
     def update_image_handle_com_and_buttons(self, image):
         """
-        信号与槽-信号函数
+        信号与槽-槽函数
         更新摄像头图像，显示图像id，向arduino发送信号，并处理按钮显示时机
         :param image:camera线程更新的图像
         :return:
