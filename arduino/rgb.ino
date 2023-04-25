@@ -1,29 +1,18 @@
-/*
- * ShiftPWM non-blocking RGB fades example, (c) Elco Jacobs, updated August 2012.
- *
- * This example for ShiftPWM shows how to control your LED's in a non-blocking way: no delay loops.
- * This example receives a number from the serial port to set the fading mode. Instead you can also read buttons or sensors.
- * It uses the millis() function to create fades. The block fades example might be easier to understand, so start there.
- *
- * Please go to www.elcojacobs.com/shiftpwm for documentation, fuction reference and schematics.
- * If you want to use ShiftPWM with LED strips or high power LED's, visit the shop for boards.
- */
+#include <BH1750.h>
+#include <ShiftPWM.h>   // include ShiftPWM.h after setting the pins!
+#include <Wire.h>
+#define delayTime 1
 
-// ShiftPWM uses timer1 by default. To use a different timer, before '#include <ShiftPWM.h>', add
-// #define SHIFTPWM_USE_TIMER2  // for Arduino Uno and earlier (Atmega328)
-// #define SHIFTPWM_USE_TIMER3  // for Arduino Micro/Leonardo (Atmega32u4)
-
-// Clock and data pins are pins from the hardware SPI, you cannot choose them yourself.
-// Data pin is MOSI (Uno and earlier: 11, Leonardo: ICSP 4, Mega: 51, Teensy 2.0: 2, Teensy 2.0++: 22) 
-// Clock pin is SCK (Uno and earlier: 13, Leonardo: ICSP 3, Mega: 52, Teensy 2.0: 1, Teensy 2.0++: 21)
+ BH1750 lightMeter;
+const int sensorPin = A0; //定义SR501人体红外的引脚
+const int ledPinB = 9;    //定义LED灯的引脚
+const int ledPinG = 10;    //定义LED灯的引脚
+const int ledPinR = 11;    //定义LED灯的引脚
+int sensorValue = 0;      //声明传感器数据变量
+const int threshold = 30; // 光照度阈值，单位为lx，根据需要调整
 
 // You can choose the latch pin yourself.
 const int ShiftPWM_latchPin=8;
-
-// ** uncomment this part to NOT use the SPI port and change the pin numbers. This is 2.5x slower **
-// #define SHIFTPWM_NOSPI
-// const int ShiftPWM_dataPin = 11;
-// const int ShiftPWM_clockPin = 13;
 
 
 // If your LED's turn on if the pin is low, set this to true, otherwise set it to false.
@@ -34,7 +23,7 @@ const bool ShiftPWM_invertOutputs = false;
 // This will be a bit easier on your power supply, because the current peaks are distributed.
 const bool ShiftPWM_balanceLoad = false;
 
-#include <ShiftPWM.h>   // include ShiftPWM.h after setting the pins!
+
 
 // Here you set the number of brightness levels, the update frequency and the number of shift registers.
 // These values affect the load of ShiftPWM.
@@ -52,36 +41,68 @@ int redValue;
 int greenValue;
 int blueValue;
 
+void printInfos(int R, int G, int B, int sensorValue, uint16_t lux);
+
 void setup(){
   while(!Serial){
-    delay(100); 
+    delay(100);
   }
   Serial.begin(115200);
+  Wire.begin();
+  lightMeter.begin();
+  pinMode(sensorPin, INPUT);
 
   // Sets the number of 8-bit registers that are used.
   ShiftPWM.SetAmountOfRegisters(numRegisters);
 
-  // SetPinGrouping allows flexibility in LED setup. 
+  // SetPinGrouping allows flexibility in LED setup.
   // If your LED's are connected like this: RRRRGGGGBBBBRRRRGGGGBBBB, use SetPinGrouping(4).
   ShiftPWM.SetPinGrouping(1); //This is the default, but I added here to demonstrate how to use the funtion
-  
+
   ShiftPWM.Start(pwmFrequency,maxBrightness);
 }
 
 void loop()
-{    
-  #define delayTime 1
+{
+  bool isGetFace = false;
   String input = Serial.readString();
-  
+  sensorValue = analogRead(sensorPin);   //读取传感器数据
+  uint16_t lux = lightMeter.readLightLevel();
+
   sscanf(input.c_str(), "%3d %3d %3d", &redValue, &greenValue, &blueValue);
-  Serial.print(redValue);
-  Serial.print(greenValue);
-  Serial.println(blueValue);
-  for(unsigned int led=0;led<numRGBLeds;led++){
-    ShiftPWM.SetRGB(led,redValue,greenValue,blueValue);
+
+  if (redValue != 0 || greenValue != 0 || blueValue != 0) {
+    isGetFace = true;
   }
+
+  if(sensorValue > 800 && lux < threshold) {
+    for(unsigned int led=0; led<numRGBLeds; led++){
+      ShiftPWM.SetRGB(led,255,255,255);
+    }
+  }
+
+  if (isGetFace) {
+    for(unsigned int led=0; led<numRGBLeds; led++){
+      ShiftPWM.SetRGB(led,redValue,greenValue,blueValue);
+    }
+  }
+
   while (Serial.read() >= 0){
       ; // flush remaining characters
   }
+
+  printInfos(redValue, greenValue, blueValue, sensorValue, lux);
   delay(delayTime);
+}
+
+void printInfos(int R, int G, int B, int sensorValue, uint16_t lux) {
+  Serial.print("Light: ");
+  Serial.print(lux);
+  Serial.print(" lx");
+  Serial.print("  sensorValue: ");
+  Serial.print(sensorValue);
+  Serial.print("  current RGB: ");
+  Serial.print(R);
+  Serial.print(G);
+  Serial.println(B);
 }
